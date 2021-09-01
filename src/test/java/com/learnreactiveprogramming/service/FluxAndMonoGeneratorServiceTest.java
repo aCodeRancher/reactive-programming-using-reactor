@@ -2,6 +2,7 @@ package com.learnreactiveprogramming.service;
 
 import com.learnreactiveprogramming.exception.ReactorException;
 import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Hooks;
 import reactor.test.StepVerifier;
 import reactor.test.scheduler.VirtualTimeScheduler;
@@ -24,10 +25,12 @@ class FluxAndMonoGeneratorServiceTest {
 
         //then
         StepVerifier.create(stringFlux)
-                //.expectNext("alex", "ben", "chloe")
-                //.expectNextCount(3)
-                .expectNext("alex")
-                .expectNextCount(2)
+              .expectNext("alex" , "ben", "chloe")
+               // .expectNext("ben")
+              //  .expectNext("chloe")
+               // .expectNextCount(3)
+
+               // .expectNextCount(2)
                 .verifyComplete();
 
     }
@@ -43,8 +46,8 @@ class FluxAndMonoGeneratorServiceTest {
 
         //then
         StepVerifier.create(stringFlux)
-                //.expectNext("ALEX", "BEN", "CHLOE")
-                .expectNextCount(3)
+               .expectNext("alex", "ben", "chloe")
+              //  .expectNextCount(3)
                 .verifyComplete();
 
 
@@ -59,10 +62,12 @@ class FluxAndMonoGeneratorServiceTest {
 
         //then
         StepVerifier.create(stringMono)
-                .expectNext("alex")
+                .expectNextMatches( name -> name.equals("alex"))
                 .verifyComplete();
 
     }
+
+
 
     @Test
     void namesMono_map_filter() {
@@ -681,7 +686,7 @@ class FluxAndMonoGeneratorServiceTest {
 
         //then
         StepVerifier.create(flux)
-                .expectNext("A", "B", "C")
+                .expectNext("A")
                 .expectError(ReactorException.class)
                 .verify();
     }
@@ -972,5 +977,17 @@ class FluxAndMonoGeneratorServiceTest {
                 //.expectNext(0,1,2,3,4)
                 .expectNextCount(5)
                 .verifyComplete();
+    }
+
+    @Test
+    public void namesFluxmaptest(){
+        Flux<String> names = fluxAndMonoGeneratorService.namesFlux_map();
+        StepVerifier.create(names).expectNext("ALEX").verifyComplete();
+    }
+
+    @Test
+    public void namesFlux_immu(){
+        Flux<String> names = fluxAndMonoGeneratorService.namesFlux_immu();
+        StepVerifier.create(names).expectNext("alex").verifyComplete();
     }
 }

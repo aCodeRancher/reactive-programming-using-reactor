@@ -854,5 +854,13 @@ public class FluxAndMonoGeneratorService {
         });
     }
 
+    public Flux<String> namesFlux_map(){
+        return Flux.fromIterable(List.of("alex")).map(String::toUpperCase);
+    }
 
+    public Flux<String> namesFlux_immu(){
+        var names = Flux.fromIterable(List.of("alex"));
+        names.map(String::toUpperCase);
+        return names;
+    }
 }
