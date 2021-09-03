@@ -4,6 +4,7 @@ import com.learnreactiveprogramming.exception.ReactorException;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Hooks;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 import reactor.test.scheduler.VirtualTimeScheduler;
 import reactor.tools.agent.ReactorDebugAgent;
@@ -990,4 +991,17 @@ class FluxAndMonoGeneratorServiceTest {
         Flux<String> names = fluxAndMonoGeneratorService.namesFlux_immu();
         StepVerifier.create(names).expectNext("alex").verifyComplete();
     }
+
+    @Test
+    public void namesMono_map_filter_defaultIfEmpty(){
+       Mono<String> monoName = fluxAndMonoGeneratorService.namesMono_map_filter(4).log();
+       StepVerifier.create(monoName).expectNext("default").verifyComplete();
+
+    }
+    @Test
+    public void namesMono_map_filter_switchIfEmpty(){
+         Mono<String> monoName = fluxAndMonoGeneratorService.namesMono_map_filter_switchIfEmpty(4).log();
+         StepVerifier.create(monoName).expectNext("default").verifyComplete();
+    }
+
 }
