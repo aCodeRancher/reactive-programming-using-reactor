@@ -152,9 +152,8 @@ public class FluxAndMonoGeneratorService {
         return Flux.fromIterable(namesList)
                 .transform(filterMap)
                 // gives u the opportunity to combine multiple operations using a single call.
-                .flatMap(this::splitString);
-
-              //  .defaultIfEmpty("default");
+                .flatMap(this::splitString)
+                .defaultIfEmpty("default");
         //using "map" would give the return type as Flux<Flux<String>
 
     }
