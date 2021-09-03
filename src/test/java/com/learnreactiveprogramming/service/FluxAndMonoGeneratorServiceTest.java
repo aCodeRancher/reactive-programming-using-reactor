@@ -1004,4 +1004,25 @@ class FluxAndMonoGeneratorServiceTest {
          StepVerifier.create(monoName).expectNext("default").verifyComplete();
     }
 
+    @Test
+    public void explore_concatWith1(){
+         Flux<String> concatStrings = fluxAndMonoGeneratorService.explore_concatWith().log();
+         StepVerifier.create(concatStrings)
+                     .expectNext("A")
+                     .expectNext("B")
+                     .expectNext("C")
+                     .expectNext("D")
+                     .expectNext("E")
+                     .expectNext("F")
+                     .verifyComplete();
+    }
+
+    @Test
+    public void explore_concatWith_mono(){
+        Flux<String> concatString = fluxAndMonoGeneratorService.explore_concatWith_mono().log();
+        StepVerifier.create(concatString)
+                    .expectNext("A")
+                    .expectNext("B")
+                    .verifyComplete();
+    }
 }
