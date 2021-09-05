@@ -11,6 +11,10 @@ import reactor.tools.agent.ReactorDebugAgent;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FluxAndMonoGeneratorServiceTest {
 
@@ -377,7 +381,7 @@ class FluxAndMonoGeneratorServiceTest {
         //then
         StepVerifier.create(value)
                 // .expectNext("A", "B", "C", "D", "E", "F")
-                .expectNext("A", "D", "B", "E", "C", "F")
+                .expectNext("A", "D", "B", "E", "C", "F" )
                 .verifyComplete();
 
     }
@@ -1024,5 +1028,58 @@ class FluxAndMonoGeneratorServiceTest {
                     .expectNext("A")
                     .expectNext("B")
                     .verifyComplete();
+    }
+
+    @Test
+    public void namesFluxThreading() throws InterruptedException{
+        CountDownLatch countDownLatch = new CountDownLatch(3);
+        //The flux starts a thread and emits the names
+        fluxAndMonoGeneratorService.namesFlux()
+        .subscribe( (s) -> {
+                            System.out.println(s);
+                            countDownLatch.countDown();
+        });
+        //The main thread wait for 5 seconds here until the flux completes the emission
+        countDownLatch.await(5, TimeUnit.SECONDS);
+        assertTrue(countDownLatch.getCount()==0);
+
+    }
+
+    @Test
+    public void explore_mergeWith_assignment(){
+         Flux<String> mergedStrings = fluxAndMonoGeneratorService.explore_mergeWith().log();
+         StepVerifier.create(mergedStrings)
+                     .expectNext("A", "D", "B", "E", "C", "F")
+                     .verifyComplete();
+
+    }
+
+    @Test
+    public void explore_mergeWith_mono_assigment5(){
+        Flux<String> mergedMono = fluxAndMonoGeneratorService.explore_mergeWith_mono().log();
+        StepVerifier.create(mergedMono)
+                 .expectNext("A", "B").verifyComplete();
+    }
+
+    @Test
+    public void explore_mergeWith_mono_withDelay(){
+        Flux<String> mergedMono = fluxAndMonoGeneratorService.explore_mergeWith_mono_withDelay().log();
+        StepVerifier.create(mergedMono)
+                    .expectNext("B", "A").verifyComplete();
+    }
+
+    @Test
+    public void explore_zipWith_assignment6(){
+         Flux<String> zippedStrings = fluxAndMonoGeneratorService.explore_zip();
+         StepVerifier.create(zippedStrings)
+                     .expectNext("AD" , "BE", "CF")
+                     .verifyComplete();
+    }
+
+    @Test
+    public void explore_zipWith_mono_assignment6(){
+          Mono<String> zippedMonoStrings = fluxAndMonoGeneratorService.explore_zipWith_mono();
+          StepVerifier.create(zippedMonoStrings)
+                      .expectNext("AB").verifyComplete();
     }
 }
