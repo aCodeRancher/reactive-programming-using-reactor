@@ -284,6 +284,16 @@ public class FluxAndMonoGeneratorService {
 
     }
 
+    public Flux<String> explore_mergeWith_mono_withDelay() {
+
+        var aMono = Mono.just("A").delayElement(Duration.ofMillis(120));
+
+        var bMono = Mono.just("B").delayElement(Duration.ofMillis(90));
+
+        return aMono.mergeWith(bMono);
+
+
+    }
     // "A","B","C","D","E","F"
     // Flux is subscribed early
     public Flux<String> explore_mergeSequential() {
