@@ -47,4 +47,15 @@ class ReviewServiceTest {
                 })
                 .verifyComplete();
     }
+
+    @Test
+    void retrieveReviewFlux_RestClient(){
+          Long reviewId = 1L;
+
+          var reviews = reviewService.retrieveReviewsFlux_RestClient(reviewId);
+          StepVerifier.create(reviews)
+                      .expectNextMatches(review -> review.getReviewId()==1L && review.getReviewId()==1L)
+                      .verifyComplete();
+
+    }
 }
