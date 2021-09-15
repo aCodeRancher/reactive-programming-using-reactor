@@ -51,4 +51,13 @@ class MovieInfoServiceTest {
                 )
                 .verifyComplete();
     }
+
+    @Test
+    void retrieveMovieById(){
+        Long movieInfoId = 1L;
+       var movie =  movieInfoService.retrieveMovieInfoById_RestClient(movieInfoId);
+       StepVerifier.create(movie)
+                   .expectNextMatches(movieInfo ->  movieInfo.getName().equals("Batman Begins"))
+                   .verifyComplete();
+     }
 }
