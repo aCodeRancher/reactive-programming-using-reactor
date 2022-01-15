@@ -1,6 +1,5 @@
 package com.learnreactiveprogramming.service;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.test.StepVerifier;
@@ -18,8 +17,7 @@ public class MovieReactiveServiceRestClientTest {
     MovieReactiveService movieReactiveService = new MovieReactiveService(mis, rs,revenueService);
 
     @Test
-    @Disabled
-    void getAllMovies_RestClient() {
+   void getAllMovies_RestClient() {
         //given
 
         //when
@@ -36,8 +34,7 @@ public class MovieReactiveServiceRestClientTest {
     }
 
     @Test
-    @Disabled
-    void getMovieById_RestClient() {
+   void getMovieById_RestClient() {
 
         //given
         var movieInfoId = 1 ;
