@@ -709,7 +709,7 @@ public class FluxAndMonoGeneratorService {
         var delay = new Random().nextInt(1000);
         var charArray = name.split("");
         return Flux.fromArray(charArray)
-                .delayElements(Duration.ofMillis(delay));
+                .delayElements(Duration.ofMillis(delay)) ;
     }
 
     private Flux<String> delayString(String string) {
@@ -837,11 +837,18 @@ public class FluxAndMonoGeneratorService {
                 .delayElements(Duration.ofSeconds(1));
     }
 
+    public Flux<String> namesFlux_flatMap_WithDelay(Integer length) {
+        return Flux.fromIterable(List.of("Alex", "Gaurav", "Ram"))
+                .map(String::toUpperCase)
+                .filter(name->name.length() > length)
+                .flatMap(name -> splitString_withDelay(name))
+                .log();  // db or remote call will return this.
+    }
     public static void main(String[] args) {
 
         FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
 
-        Flux<String> namesFlux = fluxAndMonoGeneratorService.namesFlux().log();
+       /* Flux<String> namesFlux = fluxAndMonoGeneratorService.namesFlux().log();
 
         namesFlux.subscribe((name) -> {
             System.out.println("Name is : " + name);
@@ -852,7 +859,13 @@ public class FluxAndMonoGeneratorService {
         namesMono.subscribe((name) -> {
             System.out.println("Name is : " + name);
         });
+    }*/
+        fluxAndMonoGeneratorService.namesFlux_flatMap_WithDelay(3)
+                .subscribe(name -> log.info("Flux Name is: {}", name));
+        try {
+            Thread.sleep(8000);
+        }
+        catch(Exception e) {}
     }
-
 
 }
